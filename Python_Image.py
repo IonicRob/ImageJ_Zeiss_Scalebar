@@ -25,6 +25,7 @@ gui = GenericDialogPlus("Settings")
 
 # The GenericDialogPlus also allows to select files, folder or both using a browse button
 gui.addFileField("Some_file path", "DefaultFilePath")
+# For the below you can add in your own default folder by replacing DefaultFolder with a string of your path. Remember to change \ to / as I think that is needed to work.
 gui.addDirectoryField("Some_folder path", "DefaultFolder")
 gui.addNumericField("Scale Bar Length", 50)
 
