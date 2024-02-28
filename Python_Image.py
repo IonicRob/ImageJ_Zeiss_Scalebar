@@ -15,7 +15,10 @@
 from ij import IJ, Prefs
 from ij.io import DirectoryChooser
 import os
+import sys
 from fiji.util.gui import GenericDialogPlus
+
+addScalebar = True
 
 # The following is inspired from here
 # https://imagej.net/scripting/generic-dialog
@@ -26,7 +29,6 @@ gui = GenericDialogPlus("Settings")
 # The GenericDialogPlus also allows to select files, folder or both using a browse button
 gui.addFileField("Some_file path", "DefaultFilePath")
 # For the below you can add in your own default folder by replacing DefaultFolder with a string of your path. Remember to change \ to / as I think that is needed to work.
-gui.addDirectoryField("Some_folder path", "DefaultFolder")
 gui.addNumericField("Scale Bar Length", 50)
 
 gui.showDialog()
@@ -37,8 +39,11 @@ if gui.wasOKed():
     # Path are recovered as string
     filePath   = gui.getNextString()
     folderPath = gui.getNextString()
-
 ##################################################################################################
+
+print(len(filePath))
+
+#folderPath = folderPath.replace("\\", "/")
 
 # The below is a nice hack that allows you to copy and paste the path to the image
 if filePath[0] == '\"':
@@ -175,7 +180,8 @@ else:
     # This will be done if microns are the most reasonable units to show
     IJ.run("Set Scale...", "distance=1000 known="+str(calibration)+" unit=um");
 # This sets the scale bar parameters and can be changed manually
-IJ.run("Scale Bar...", "width="+str(scalebarlength)+" height="+str(ScaleBarHeight)+" font="+str(ScaleBarFontSize)+" color=White background=Black location=[Lower Right] bold overlay")
+if addScalebar:
+    IJ.run("Scale Bar...", "width="+str(scalebarlength)+" height="+str(ScaleBarHeight)+" font="+str(ScaleBarFontSize)+" color=White background=None location=[Lower Right] bold overlay")
 
 # The following is inpsired from here
 # https://note.nkmk.me/en/python-os-basename-dirname-split-splitext/
@@ -188,3 +194,5 @@ saveName = "SEM "+basename_without_ext+".png"
 # Save the new image as a png in the directory savedir
 IJ.saveAs(imp, "png", os.path.join(savedir, saveName));
 print("Saved image as:\n"+saveName+"\nTo folder:\n"+savedir)
+
+#IJ.run("Close");
